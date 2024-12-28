@@ -16,3 +16,6 @@ CMakeFiles
 .vscode
 /osx-utils/macos-bundler
 out/*
+
+excluded*
+.idea
