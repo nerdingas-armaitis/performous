@@ -10,10 +10,11 @@ ARG TZ="America/New_York"
 ENV PACKAGE_TYPE="DEB"
 
 ## Install the deps and create the build directory
+ARG OS_VERSION="22.04"
 RUN <<EOR
 #!/bin/bash -x
-    set -eo pipefail
-	if [[ "${VERSION_ID}" == "20.04" ]]; then
+    set -euo pipefail
+	if [[ "${OS_VERSION}" == "20.04" ]]; then
 		apt-get -y update
 		apt-get -y install gnupg wget
 		wget -O ./key.asc https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null
