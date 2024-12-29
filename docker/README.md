@@ -74,5 +74,5 @@ performous-docker-build:ubuntu22.04 /bin/bash -c \
 && make -j$(nproc) install DESTDIR=../AppDir \
 && cd .. \
 && /usr/local/bin/appimage-builder --appimage-extract-and-run --recipe ./AppImageBuilder.yml --skip-test \
-&& cp /performous/local/Performous-testing-x86_64.AppImage /performous/packages/'
+&& cp /performous/local/Performous-${PACKAGE_VERSION}-x86_64.AppImage /performous/packages/'
 ```
