@@ -46,3 +46,33 @@ One-Liner to generate packages and copy them to `/tmp` on the running system:
 ```
 mkdir /tmp/performous-packages && docker run --rm --mount type=bind,source=/tmp/performous-packages,target=/performous/packages performous-docker-build:ubuntu22.04 /bin/bash -c './build_performous.sh -c -R -g && cp performous/build/*.deb /performous/packages'
 ```
+
+### build executable from current directory
+```
+docker run --rm \
+--mount type=bind,source=/tmp/performous-packages,target=/performous/packages \
+--mount type=bind,source=./,target=/performous/host,readonly \
+performous-docker-build:ubuntu22.04 /bin/bash -c \
+'cp -r /performous/host /performous/local \
+&& ./build_performous.sh -c -D /performous/local -R -g \
+&& cp /performous/local/build/performous /performous/packages/'
+```
+
+### build appimage from current directory
+```
+docker run --rm \
+--mount type=bind,source=/tmp/performous-packages,target=/performous/packages \
+--mount type=bind,source=./,target=/performous/host,readonly \
+performous-docker-build:ubuntu22.04 /bin/bash -c \
+'export PACKAGE_VERSION="testing" \
+&& cp -r /performous/host /performous/local \
+&& cd /performous/local \
+&& sed -i s/@@VERSION@@/${PACKAGE_VERSION}/ ./AppImageBuilder.yml \
+&& mkdir build \
+&& cd build \
+&& cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_WEBSERVER=ON -DENABLE_WEBCAM=ON -DSELF_BUILT_CED=ALWAYS -DPERFORMOUS_VERSION=$PACKAGE_VERSION .. \
+&& make -j$(nproc) install DESTDIR=../AppDir \
+&& cd .. \
+&& /usr/local/bin/appimage-builder --appimage-extract-and-run --recipe ./AppImageBuilder.yml --skip-test \
+&& cp /performous/local/Performous-testing-x86_64.AppImage /performous/packages/'
+```
