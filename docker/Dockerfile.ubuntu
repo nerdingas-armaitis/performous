@@ -13,7 +13,7 @@ ENV PACKAGE_TYPE="DEB"
 ARG OS_VERSION="22.04"
 RUN <<EOR
 #!/bin/bash -x
-    set -euo pipefail
+	set -euo pipefail
 	if [[ "${OS_VERSION}" == "20.04" ]]; then
 		apt-get -y update
 		apt-get -y install gnupg wget
